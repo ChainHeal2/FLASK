@@ -7,8 +7,7 @@ para que la variable de entorno detecte que estamos usando nuestra app
 """
 import os # lo usamos para sacar las variables del sistema.
 from flask import Flask
-from . import db
-from . import auth # importamos nuestro primer Blueprint tiene como nombre auth ver en auth.py
+
 def create_app():
     """Creamos la APP
     desde app.config.from_mapping: son las variables del OS (operative system)
@@ -36,11 +35,16 @@ def create_app():
         DATABASE_USER = os.environ.get('FLASK_DATABASE_USER'),
         DATABASE = os.environ.get('FLASK_DATABASE'),
     )
+    from . import db
     db.init_app(app)
-    app.register_blueprint(auth.bp)
-    @app.route('/')#ayuda a generar nuestras rutas dentro de la pagina
-    @app.route('/index')#podemos tener las rutas que necesitemos
+    from .templates.auth import auth # importamos nuestro primer Blueprint tiene como nombre auth ver en auth.py
+    app.register_blueprint(auth.bp) #ignoramos el PEP 8 en esta ocacion por la el tipo de implementacion de flask
+    from .templates.index import index
+    app.register_blueprint(index.bp)
+    #ayuda a generar nuestras rutas dentro de la pagina, la dejaremos comentada para que no sea nuestra principal
+    #@app.route('/')
+    @app.route('/saludo')#podemos tener las rutas que necesitemos
     def hola():
         """Devuelve un hola mundo como simulando lo que seria un index"""
-        return 'hola mundo'
+        return 'Hola Mundo!!! esta es una pagina secreta que solo se podra acceder si tenemos la ruta /saludo'
     return app
