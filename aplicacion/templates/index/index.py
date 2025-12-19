@@ -5,4 +5,6 @@ bp = Blueprint('inicio',__name__)#podemos no usar prefix como en auth para no ge
 @bp.route('/index', methods = ['GET','POST'])
 def index():
     """Pagina de index"""
-    return render_template('base.html')# si el archivo estuviera solo dentro de templates
+    usuario = session.get('username')
+    #envaimos el usuario para usarlo en el html
+    return render_template('base.html',usuario=usuario)# si el archivo estuviera solo dentro de templates

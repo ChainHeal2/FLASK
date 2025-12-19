@@ -1,4 +1,6 @@
-{%extends 'base.html'%}
+{% extends "base.html"%}
+<!-- aqui estamos usando Jinja esto nos permite extender una plantilla -->
+{%block h1%}Registro de usuario nuevo{%endblock%}
 {%block contenido%}
 <form method="post">
     <div>
@@ -6,7 +8,7 @@
         <input type="text" name="usuario" id="usuario" required>
         <label for="password">contraseña:</label>
         <input type="password" name="password" id="password" required>
-        <button type="submit">Iniciar sesion</button>
+        <button type="submit">registrarse</button>
     </div>
 </form>
 {%endblock%}

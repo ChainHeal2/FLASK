@@ -34,13 +34,13 @@ def register():
         flash(error)#si por cualquier cosa fallara retornaria este mensaje
         #podemos usar mensajes por defecto ("error usuario",'error')
         #esto seria un mensaje con categoria bastante util para el manejo de errores
-    return render_template('/index/register.html')
+    return render_template('/auth/register.html')
 
 @bp.route('/login',methods = ['GET','POST'])
 def login():
     """Un Login sencillo"""
     if request.method == 'POST':
-        username = request.form['username']
+        username = request.form['usuario']
         password = request.form['password']
         db,c = get_db()
         error = None
@@ -54,7 +54,17 @@ def login():
             error = 'Usuario y o contraseña invalida'
         if error is None:
             session.clear()
-            session['user_id']=user['id']
-            return redirect(url_for('index'))
+            session['user_id']= user['id']
+            session['username']= user['username'] 
+            #capturamos la session para utilizarla donde queramos en este caso en index
+            return redirect(url_for('inicio.index'))
     #flash(error)
     return(render_template('auth/login.html'))
+def login_required(view):
+    """Funcion decoradora que toma el en este caso el login"""
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+    return wrapped_view
